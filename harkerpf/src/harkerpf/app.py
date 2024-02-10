@@ -291,11 +291,11 @@ class Harker_Extended(QMainWindow):
         save_action.triggered.connect(self.save_figure)  # 连接到save_figure方法
         toolbar.addAction(save_action)
 
-        # 在工具栏中添加一个Export action
-        export_action = QAction('Export Result', self)
-        export_action.setShortcut('Ctrl+E')  # 设置快捷键为Ctrl+E
-        export_action.triggered.connect(self.export_result)  # 连接到export_result方法
-        toolbar.addAction(export_action)
+        # # 在工具栏中添加一个Export action
+        # export_action = QAction('Export Result', self)
+        # export_action.setShortcut('Ctrl+E')  # 设置快捷键为Ctrl+E
+        # export_action.triggered.connect(self.export_result)  # 连接到export_result方法
+        # toolbar.addAction(export_action)
 
 
         # 创建一个表格视图

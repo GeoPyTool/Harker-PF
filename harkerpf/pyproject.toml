@@ -2,7 +2,7 @@
 [tool.briefcase]
 project_name = "Harker-PF"
 bundle = "com.geopytool"
-version = "0.0.1"
+version = "1.0.0"
 url = "https://github.com/GeoPyTool/Harker-PF"
 license = "GNU General Public License v3 or later (GPLv3+)"
 author = "Freddy"
@@ -24,6 +24,13 @@ test_sources = [
 requires = [
     "PySide6-Essentials~=6.5",
     # "PySide6-Addons~=6.5",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "scipy",
+    "toga",
+    "toga-chart",
+    "scikit-learn==1.2.0",
 ]
 test_requires = [
     "pytest",
