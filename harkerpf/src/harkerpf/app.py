@@ -1,5 +1,5 @@
 """
-Harker Diagram extended with Probabilistic Field
+Harker Diagram extended with Particle Flexibility
 """
 import json
 import pickle
@@ -224,9 +224,10 @@ class Harker_Extended(QMainWindow):
         self.setting = 'Withlines'
         self.color_setting = ''
         self.data_path=''
+        self.FeO_Total = False
 
     def init_ui(self):
-        self.setWindowTitle('Harker-PF: Harker Diagram extended with Probabilistic Field ')
+        self.setWindowTitle('Harker-PF: Harker Diagram extended with Particle Flexibility ')
         self.resize(1024, 600)  # 设置窗口尺寸为1024*600
 
         # 创建工具栏
@@ -266,7 +267,20 @@ class Harker_Extended(QMainWindow):
         plot_action.setShortcut('Ctrl+P') # 设置快捷键为Ctrl+P
         plot_action.triggered.connect(self.plot_data)  # 连接到plot_data方法
         toolbar.addAction(plot_action)
+        
+        toolbar.addWidget(spacer) # Add a separator before the first switch
 
+
+        Original_label = QLabel("     Original")
+        toolbar.addWidget(Original_label)
+        # 创建并添加一个QSwitch控件，并将其初始值设为0
+        FeO_Total_type_switch = QSwitch()
+        FeO_Total_type_switch.setValue(0)
+        # 当QSwitch的状态改变时，触发toggle_vol_plu方法
+        FeO_Total_type_switch.valueChanged.connect(self.toggle)
+        toolbar.addWidget(FeO_Total_type_switch)
+        FeO_Total_label = QLabel("FeO_Total     ")
+        toolbar.addWidget(FeO_Total_label)
 
         toolbar.addWidget(spacer) # Add a separator before the first switch
         # Add a label before the switch
@@ -330,6 +344,24 @@ class Harker_Extended(QMainWindow):
         # 改变当前工作目录
         os.chdir(current_directory)
 
+    def toggle(self, checked):
+        # 判断复选框是否未被选中
+        if not checked:
+            self.FeO_Total = False
+        else:
+            self.FeO_Total = True
+            # 注释掉的打印语句：切换到 PLU 模式
+
+        # 检查DataFrame对象self.df是否为空
+        if self.df.empty:
+            # 如果数据为空，则不做任何操作（pass语句）
+            pass
+
+        # 否则，若数据不为空
+        else:
+            # 不论数据是否为空，均调用plot_data()方法重新绘制图表
+            self.plot_data()
+
 
     def open_file(self):
         global working_directory 
@@ -391,29 +423,35 @@ class Harker_Extended(QMainWindow):
             M_Fe = 55.845  # g/mol
             conversion_factor = (2 * M_FeO) / M_Fe2O3
 
-            # 检查是否存在'FeO_Total(wt%)'列
-            if 'FeO_Total(wt%)' not in self.df.columns:
-                
-                if 'FeO(wt%)'  in self.df.columns and 'Fe2O3(wt%)' in self.df.columns:
-                    # 将'Fe2O3(wt%)'和'FeO(wt%)'的摩尔数相加来创建'FeO_Total(wt%)'
-                    self.df['FeO_Total(wt%)'] = self.df.apply(lambda row: row['Fe2O3(wt%)']* conversion_factor + row['FeO(wt%)'], axis=1)
-                elif  'Fe2O3(wt%)' in self.df.columns :
-                    self.df['FeO_Total(wt%)'] = self.df.apply(lambda row: row['Fe2O3(wt%)']* conversion_factor, axis=1)
-                
-                elif   'FeO(wt%)'  in self.df.columns :
-                    self.df['FeO_Total(wt%)'] = self.df.apply(lambda row:row['FeO(wt%)'], axis=1)
-                else:
-                    pass
+            if self.FeO_Total:
 
-            # 从target_y_list中移除'Fe2O3(wt%)'和'FeO(wt%)'
-            if 'Fe2O3(wt%)' in target_y_list:
-                target_y_list.remove('Fe2O3(wt%)')
-            if 'FeO(wt%)' in target_y_list:
-                target_y_list.remove('FeO(wt%)')
+                # 检查是否存在'FeO_Total(wt%)'列
+                if 'FeO_Total(wt%)' not in self.df.columns:
+                    
+                    if 'FeO(wt%)'  in self.df.columns and 'Fe2O3(wt%)' in self.df.columns:
+                        # 将'Fe2O3(wt%)'和'FeO(wt%)'的摩尔数相加来创建'FeO_Total(wt%)'
+                        self.df['FeO_Total(wt%)'] = self.df.apply(lambda row: row['Fe2O3(wt%)']* conversion_factor + row['FeO(wt%)'], axis=1)
+                    elif  'Fe2O3(wt%)' in self.df.columns :
+                        self.df['FeO_Total(wt%)'] = self.df.apply(lambda row: row['Fe2O3(wt%)']* conversion_factor, axis=1)
+                    
+                    elif   'FeO(wt%)'  in self.df.columns :
+                        self.df['FeO_Total(wt%)'] = self.df.apply(lambda row:row['FeO(wt%)'], axis=1)
+                    else:
+                        pass
 
-            # 如果'FeO_Total(wt%)'不在target_y_list中，就添加它
-            if 'FeO_Total(wt%)' not in target_y_list:
-                target_y_list.append('FeO_Total(wt%)')
+                # 从target_y_list中移除'Fe2O3(wt%)'和'FeO(wt%)'
+                if 'Fe2O3(wt%)' in target_y_list:
+                    target_y_list.remove('Fe2O3(wt%)')
+                if 'FeO(wt%)' in target_y_list:
+                    target_y_list.remove('FeO(wt%)')
+
+                # 如果'FeO_Total(wt%)'不在target_y_list中，就添加它
+                if 'FeO_Total(wt%)' not in target_y_list:
+                    target_y_list.append('FeO_Total(wt%)')
+                pass
+            else:
+                pass           
+          
 
             print(len(target_y_list))
 
@@ -529,7 +567,7 @@ class Harker_Extended(QMainWindow):
             fig.suptitle('Extended Harker Diagram', fontsize=12)
 
             # 调整图的布局以留出足够的空间来显示图例
-            fig.subplots_adjust(top=0.9)
+            fig.subplots_adjust(top=0.93)
             # 使用fig.legend()来显示图例
             fig.legend(handles, labels, loc='upper right')
             

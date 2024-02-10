@@ -10,7 +10,7 @@ author_email = "wedonotuse@outlook.com"
 
 [tool.briefcase.app.harkerpf]
 formal_name = "Harker-PF"
-description = "Harker Diagram extended with Probabilistic Field"
+description = "Harker Diagram extended with Part Flexibility"
 long_description = """More details about the app should go here.
 """
 icon = "src/harkerpf/resources/harkerpf"

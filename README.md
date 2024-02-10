@@ -1,2 +1,2 @@
 # Harker-PF
-Harker Diagram extended with Probabilistic Field 
+Harker Diagram extended with Part Flexibility 
