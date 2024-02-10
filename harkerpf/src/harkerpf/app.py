@@ -384,13 +384,44 @@ class Harker_Extended(QMainWindow):
                 if col not in ['SiO2(wt%)','LOI(wt%)','Total(wt%)']:
                     print(col)
                     target_y_list.append(col)
-                    
+            
+            # 摩尔质量
+            M_Fe2O3 = 159.69  # g/mol
+            M_FeO = 71.844  # g/mol
+            M_Fe = 55.845  # g/mol
+            conversion_factor = (2 * M_FeO) / M_Fe2O3
+
+            # 检查是否存在'FeO_Total(wt%)'列
+            if 'FeO_Total(wt%)' not in self.df.columns:
+                
+                if 'FeO(wt%)'  in self.df.columns and 'Fe2O3(wt%)' in self.df.columns:
+                    # 将'Fe2O3(wt%)'和'FeO(wt%)'的摩尔数相加来创建'FeO_Total(wt%)'
+                    self.df['FeO_Total(wt%)'] = self.df.apply(lambda row: row['Fe2O3(wt%)']* conversion_factor + row['FeO(wt%)'], axis=1)
+                elif  'Fe2O3(wt%)' in self.df.columns :
+                    self.df['FeO_Total(wt%)'] = self.df.apply(lambda row: row['Fe2O3(wt%)']* conversion_factor, axis=1)
+                
+                elif   'FeO(wt%)'  in self.df.columns :
+                    self.df['FeO_Total(wt%)'] = self.df.apply(lambda row:row['FeO(wt%)'], axis=1)
+                else:
+                    pass
+
+            # 从target_y_list中移除'Fe2O3(wt%)'和'FeO(wt%)'
+            if 'Fe2O3(wt%)' in target_y_list:
+                target_y_list.remove('Fe2O3(wt%)')
+            if 'FeO(wt%)' in target_y_list:
+                target_y_list.remove('FeO(wt%)')
+
+            # 如果'FeO_Total(wt%)'不在target_y_list中，就添加它
+            if 'FeO_Total(wt%)' not in target_y_list:
+                target_y_list.append('FeO_Total(wt%)')
+
             print(len(target_y_list))
 
             # 获取target_y_list的长度
             n = len(target_y_list)
 
             # 获取Figure对象
+            self.canvas.figure.clf()
             fig = self.canvas.figure
             # 计算需要的行数，向上取整
             rows = math.ceil(n / 3)
@@ -492,11 +523,15 @@ class Harker_Extended(QMainWindow):
             # 获取第一个subplot的图例
             handles, labels = ax_list[0, 0].get_legend_handles_labels()
 
-            # 使用fig.legend()来显示图例
-            fig.legend(handles, labels, loc='lower right')
             # fig.subplots_adjust(hspace=0.5, wspace=0.5)  
             fig.tight_layout()
-                        
+
+            fig.suptitle('Extended Harker Diagram', fontsize=12)
+
+            # 调整图的布局以留出足够的空间来显示图例
+            fig.subplots_adjust(top=0.9)
+            # 使用fig.legend()来显示图例
+            fig.legend(handles, labels, loc='upper right')
             
 
             # Add the new canvas to the layout
