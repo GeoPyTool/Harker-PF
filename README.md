@@ -1,6 +1,16 @@
 # Harker-PF
 Harker Diagram extended with Part Flexibility 
 
+# Install and Usage
+
+```Bash
+git clone https://github.com/GeoPyTool/Harker-PF.git
+cd Harker-PF
+pip install -r requirements.txt
+cd harkerpf
+briefcase dev
+```
+
 # GUI
 
 ![](./images/original.png)
