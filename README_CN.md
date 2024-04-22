@@ -51,7 +51,7 @@ Harker图解是一种经典的地球化学主元素分布图，主要用于展�
 | Windows 10       | 1809                         | 64-bit       |
 | Ubuntu           | 22.04.3                      | 64-bit       |
 
-## 3. 安装和运行
+## 3. 安装
 
 Harker-PF 软件提供了多种安装方式。
 
@@ -130,21 +130,89 @@ briefcase dev
 
 ![](./images/unzip.png)
 
-### 3.4 运行
+## 4 使用
 
+### 4.1 数据模板
+
+最新的数据模板都在 [DataFileSamples 这个目录里面可以下载](https://github.com/GeoPyTool/Harker-PF/tree/main/data_samples)。
+
+![](./images/data_files.png)
+
+**Geochemistry.csv**是包同时包含了Fe2O3和FeO的地球化学成分数据模板。
+**Geochemistry_FeO_Total.csv**是包含了FeO_Total的地球化学成分数据模板。
+**Geochemistry_NoFe.csv**是不含有任何铁元素氧化物的地球化学成分数据模板。
+**Geochemistry_OnlyFe2O3.csv**是只包含了Fe2O3的地球化学成分数据模板。
+**Geochemistry_OnlyFeO.csv**是只包含了FeO的地球化学成分数据模板。
+
+请一定遵守数据模板的格式，把你的数据复制粘贴进去，填写好设置信息。
+
+### 4.2 数据导入
+
+软件运行后，首先点击 Open Data 按钮打开数据文件并导入：
+![](./images/open_data.png)
+
+Harker-PF 支持CSV、Xlsx、Xls这三种表格格式的数据文件。
+请一定注意，要按照数据模板的形式将数据进行粘贴，保存成数据文件后导入使用。
+
+### 4.3 数据投图
+
+导入数据之后，可以点击 Plot 按钮来生成投图。
+需要注意的是，出于界面的简明设计原则，此处未对用户开放具体的数值处理过程。
+在数据投图之前，会被检查质量分数总和是否为100%，如果不等于100%则默认进行重新归一化的计算。另外，在计算的过程中，烧失量已经被刨除，因此此处的氧化物质量分数与原始数值并不一定严格一致。
+
+![](./images/data_plot.png)
+
+如果需要将铁元素的氧化物统一设置为FeO，则可以通过拨动滑块来进行设置。
+需要注意的是，在这一模式下，铁元素将被统一计算成FeO这一种氧化物的质量分数。
+计算过程的分子量关系等参考了ChemPy模块来实现。
+
+![](./images/data_plot_FeOT.png)
+
+### 4.4 投图保存
+
+生成投图完毕后，就可以将生成的投图保存下来。
+Harker-PF默认支持JPG、PNG两种位图，以及SVG、PDF两种矢量图。
+
+![](./images/save_figure.png)
+
+保存完成的图像如下图所示。
+首先是将所有已有元素成分数据原样显示的：
 
 ![](./images/original.png)
 
+然后是按照FeO_Total进行归一化的投图：
 ![](./images/FeO_Total.png)
 
 
-## 4 数据模板
+### 4.5 数据清除
 
-最新的数据模板都在 [DataFileSamples 这个目录里面可以下载](https://github.com/GeoPyTool/GeoPyTool/tree/master/DataFileSamples)。
+当一份数据完成投图后，如果要进行新的投图，需要点击Clear按钮来清空掉已经导入的数据和已经生成的图像。
 
-Settings.xlsx 是展示各种设置项目的效果。 **Geochemistry.xlsx**则是地球化学成分数据所对应的数据模板。
+一定要注意，在点击Clear按钮之前，一定要先保存好已经生成的图像。
 
-请一定遵守数据模板的格式，把你的数据复制粘贴进去，填写好设置信息。
+![](./images/clear_1.png)
+![](./images/clear_2.png)
+
+## 5 协议和感谢
+
+本软件遵循GPL-v3协议进行许可。具体细节请参阅[版权许可](https://github.com/GeoPyTool/Harker-PF/blob/main/LICENSE)文件。
+
+我们想要感谢以下开源项目的贡献：
+
+- [Beeware](https://beeware.org/)
+- [geopytool](https://github.com/GeoPyTool/GeoPyTool)
+- [matplotlib](https://github.com/matplotlib/matplotlib)
+- [NumPy](https://numpy.org/)
+- [openpyxl](https://github.com/openpyxl/openpyxl)
+- [Pandas](https://pandas.pydata.org/)
+- [PyInstaller](https://www.pyinstaller.org/)
+- [PyQt6](https://www.riverbankcomputing.com/software/pyqt/intro)
+- [PyQtGraph](https://pyqtgraph.readthedocs.io/en/latest/)
+- [PySide6](https://wiki.qt.io/Qt_for_Python)
+- [scikit-learn](https://github.com/scikit-learn/scikit-learn)
+- [scipy](https://github.com/scipy/scipy)
+- [Toga](https://toga.readthedocs.io/en/latest/)
+- [toga-chart](https://github.com/beeware/toga-chart)
 
 
 
