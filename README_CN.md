@@ -64,7 +64,7 @@ Harker-PF 软件提供了多种安装方式。
 首先，打开终端，从 GitHub 上克隆项目仓库：
 
 ```Bash
-git clone https://github.com/Harker-PF/Harker-PF.git
+git clone https://github.com/GeoPyTool/Harker-PF.git
 ```
 
 然后，进入到代码目录下，安装必要的依赖包：
